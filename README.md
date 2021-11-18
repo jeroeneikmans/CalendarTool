@@ -1,6 +1,6 @@
 # CalendarTool
 
-.net core 6.0
+.NET 6.0
 
 Adds a 3-month overview starting at the current date.
 
