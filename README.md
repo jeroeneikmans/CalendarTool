@@ -1,6 +1,6 @@
 # CalendarTool
 
-.NET 6.0
+.NET 6.0 WinForms
 
 Adds a 3-month overview starting at the current date.
 
