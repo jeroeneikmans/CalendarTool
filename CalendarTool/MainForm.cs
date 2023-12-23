@@ -12,6 +12,7 @@ namespace CalendarTool
     public partial class MainForm : Form
     {
         private Calendar _calendar;
+        private int _theme = 0;
 
         public MainForm()
         {
@@ -19,7 +20,6 @@ namespace CalendarTool
 
             this.SetTheme();
 
-            //this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.FormBorderStyle = FormBorderStyle.None;
             this.ControlBox = false;
             this.StartPosition = FormStartPosition.Manual;
@@ -44,11 +44,9 @@ namespace CalendarTool
 
         private void SetTheme()
         {
-            int theme = 0;
-
             try
             {
-                theme = (int)Registry.GetValue("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", "AppsUseLightTheme", 0);
+                _theme = (int)Registry.GetValue("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize", "AppsUseLightTheme", 0);
 
                 // 0 : dark theme
                 // 1 : light theme
@@ -57,12 +55,12 @@ namespace CalendarTool
             {
             }
 
-            if (theme == 0) 
+            if (_theme == 0)
             {
                 this.Icon = Properties.Resources.CalendarToolDark;
             }
 
-            if (theme == 1)
+            if (_theme == 1)
             {
                 this.Icon = Properties.Resources.CalendarToolLight;
             }
@@ -72,7 +70,7 @@ namespace CalendarTool
         }
 
         private const int infoWidth = 266;
-        private const int calendarWidth = 251;
+        private const int calendarWidth = 253;
 
         private void HideInfo()
         {
