@@ -29,7 +29,7 @@ namespace CalendarTool
             this.ShowInTaskbar = false;
             this.TopMost = true;
 
-            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("nl-NL");
+            System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
             System.Threading.Thread.CurrentThread.CurrentUICulture = System.Threading.Thread.CurrentThread.CurrentCulture;
 
             this.Text = "Info";
@@ -106,14 +106,16 @@ namespace CalendarTool
 
             string day = d.ToString("dd-MM");
 
+            string dayOfWeek = FirstCharToUpper(d.ToString("dddd"));
+
             string text = string.Empty;
             if (isTitle)
             {
-                text = string.Format("Q{0} W{1} {2}", quarter, week, day);
+                text = string.Format("Q{0} W{1} {2} {3}", quarter, week, day, dayOfWeek);
             }
             else
             {
-                text = string.Format("Q{0}\nW{1}\n{2}", quarter, week, day);
+                text = string.Format("Q{0}\nW{1}\n{2} {3}", quarter, week, day, dayOfWeek);
             }
 
             return text;
@@ -335,5 +337,13 @@ namespace CalendarTool
                 this.ShowInfo();
             }
         }
+
+        public static string FirstCharToUpper(string input) =>
+        input switch
+        {
+            null => throw new ArgumentNullException(nameof(input)),
+            "" => throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input)),
+            _ => string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1))
+        };
     }
 }
