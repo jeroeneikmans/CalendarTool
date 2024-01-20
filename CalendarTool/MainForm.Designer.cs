@@ -35,6 +35,7 @@
             contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(components);
             toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             panel1 = new System.Windows.Forms.Panel();
+            label2 = new System.Windows.Forms.Label();
             panel2 = new System.Windows.Forms.Panel();
             btnM = new System.Windows.Forms.Button();
             btnQ4 = new System.Windows.Forms.Button();
@@ -74,6 +75,7 @@
             // panel1
             // 
             panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            panel1.Controls.Add(label2);
             panel1.Controls.Add(panel2);
             panel1.Controls.Add(label1);
             panel1.Controls.Add(monthCalendar1);
@@ -81,8 +83,18 @@
             panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             panel1.Location = new System.Drawing.Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(516, 472);
+            panel1.Size = new System.Drawing.Size(516, 491);
             panel1.TabIndex = 5;
+            // 
+            // label2
+            // 
+            label2.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(265, 24);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(38, 15);
+            label2.TabIndex = 9;
+            label2.Text = "label2";
             // 
             // panel2
             // 
@@ -92,7 +104,7 @@
             panel2.Controls.Add(btnQ2);
             panel2.Controls.Add(btnQ1);
             panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            panel2.Location = new System.Drawing.Point(0, 443);
+            panel2.Location = new System.Drawing.Point(0, 462);
             panel2.Name = "panel2";
             panel2.Size = new System.Drawing.Size(514, 27);
             panel2.TabIndex = 8;
@@ -174,11 +186,13 @@
             monthCalendar1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             monthCalendar1.BackColor = System.Drawing.SystemColors.Window;
             monthCalendar1.CalendarDimensions = new System.Drawing.Size(1, 3);
-            monthCalendar1.Location = new System.Drawing.Point(264, 0);
+            monthCalendar1.Location = new System.Drawing.Point(265, 21);
+            monthCalendar1.MaxSelectionCount = 100;
             monthCalendar1.Name = "monthCalendar1";
             monthCalendar1.ShowToday = false;
             monthCalendar1.ShowWeekNumbers = true;
             monthCalendar1.TabIndex = 6;
+            monthCalendar1.DateSelected += monthCalendar1_DateSelected;
             // 
             // richTextBox1
             // 
@@ -186,7 +200,7 @@
             richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             richTextBox1.Location = new System.Drawing.Point(0, 24);
             richTextBox1.Name = "richTextBox1";
-            richTextBox1.Size = new System.Drawing.Size(266, 413);
+            richTextBox1.Size = new System.Drawing.Size(266, 432);
             richTextBox1.TabIndex = 5;
             richTextBox1.Text = "";
             // 
@@ -194,7 +208,7 @@
             // 
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             BackColor = System.Drawing.SystemColors.Window;
-            ClientSize = new System.Drawing.Size(516, 472);
+            ClientSize = new System.Drawing.Size(516, 491);
             Controls.Add(panel1);
             Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
             KeyPreview = true;
@@ -223,6 +237,7 @@
         private System.Windows.Forms.Button btnQ3;
         private System.Windows.Forms.Button btnQ2;
         private System.Windows.Forms.Button btnQ1;
+        private System.Windows.Forms.Label label2;
     }
 }
 

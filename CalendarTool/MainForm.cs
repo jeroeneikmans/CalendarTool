@@ -34,6 +34,7 @@ namespace CalendarTool
 
             this.Text = "Info";
             this.label1.Text = this.Text;
+            this.label2.Text = string.Empty;
 
             this.notifyIcon1.Text = string.Empty;
 
@@ -95,28 +96,54 @@ namespace CalendarTool
                                       workingArea.Bottom - Size.Height);
         }
 
-        private string GetText(Boolean isTitle, DateTime selection)
+        private string GetText(Boolean isTitle, DateTime dateStart, DateTime dateEnd)
         {
-            DateTime d = selection;
-
             System.Globalization.Calendar calendar = System.Threading.Thread.CurrentThread.CurrentCulture.Calendar;
-            int week = calendar.GetWeekOfYear(d, System.Globalization.CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
 
-            int quarter = (d.Month - 1) / 3 + 1;
+            int weekStart = calendar.GetWeekOfYear(dateStart, System.Globalization.CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+            int quarterStart = (dateStart.Month - 1) / 3 + 1;
+            string dayStart = dateStart.ToString("dd-MM");
+            string dayOfWeekStart = FirstCharToUpper(dateStart.ToString("dddd")).Substring(0,3);
 
-            string day = d.ToString("dd-MM");
-
-            string dayOfWeek = FirstCharToUpper(d.ToString("dddd"));
+            int weekEnd = calendar.GetWeekOfYear(dateEnd, System.Globalization.CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+            int quarterEnd = (dateEnd.Month - 1) / 3 + 1;
+            string dayEnd = dateEnd.ToString("dd-MM");
+            string dayOfWeekEnd = FirstCharToUpper(dateEnd.ToString("dddd")).Substring(0, 3);
 
             string text = string.Empty;
             if (isTitle)
             {
-                text = string.Format("Q{0} W{1} {2} {3}", quarter, week, day, dayOfWeek);
+                if (dateStart.Date == dateEnd.Date)
+                {
+                    text = string.Format("Q{0} W{1} {2} {3}", quarterStart, weekStart, dayStart, dayOfWeekStart);
+                }
+                else
+                {
+                    text = string.Format("Q{0} W{1} {2} {3} - Q{4} W{5} {6} {7}", quarterStart, weekStart, dayStart, dayOfWeekStart, quarterEnd, weekEnd, dayEnd, dayOfWeekEnd);
+                }
             }
             else
             {
-                text = string.Format("Q{0}\nW{1}\n{2} {3}", quarter, week, day, dayOfWeek);
+                if (dateStart.Date == dateEnd.Date)
+                {
+                    text = string.Format("Q{0}\nW{1}\n{2} {3}", quarterStart, weekStart, dayStart, dayOfWeekStart);
+                }
+                else
+                {
+                    text = string.Format("Q{0}\nW{1}\n{2} {3}\n-\nQ{4}\nW{5}\n{6} {7}", quarterStart, weekStart, dayStart, dayOfWeekStart, quarterEnd, weekEnd, dayEnd, dayOfWeekEnd);
+                }
             }
+
+            return text;
+        }
+
+        private string GetCalculation(DateTime dateStart, DateTime dateEnd)
+        {
+            string text = string.Empty;
+
+            TimeSpan timeSpan = dateEnd.Subtract(dateStart);
+
+            text = string.Format("D{0}", timeSpan.Days + 1);
 
             return text;
         }
@@ -180,36 +207,33 @@ namespace CalendarTool
         {
             DateTime next1 = DateTime.Now.Date;
 
-            SetDate(next1, true);
+            SetDate(next1, next1, true);
         }
 
-        private void SetDate(DateTime date, Boolean setMinDate = false)
+        private void SetDate(DateTime dateStart, DateTime dateEnd, Boolean setDate = false)
         {
-            if (setMinDate)
+            DateTime minDate = new(dateStart.Year, dateStart.Month, 1);
+
+            DateTime controlMinDate = this.monthCalendar1.MinDate;
+
+            this.monthCalendar1.MinDate = minDate;
+            this.monthCalendar1.MinDate = controlMinDate;
+
+            if (setDate)
             {
-                DateTime minDate = new(date.Year, date.Month, 1);
-
-                DateTime controlMinDate = this.monthCalendar1.MinDate;
-
-                this.monthCalendar1.MinDate = minDate;
-                this.monthCalendar1.SetDate(date);
-
-                this.monthCalendar1.MinDate = controlMinDate;
-            }
-            else
-            {
-                this.monthCalendar1.SetDate(date);
+                this.monthCalendar1.SetDate(dateStart);
             }
 
-            this.Text = GetText(true, this.monthCalendar1.SelectionStart);
+            this.Text = GetText(true, this.monthCalendar1.SelectionStart, this.monthCalendar1.SelectionEnd);
             this.label1.Text = this.Text;
+            this.label2.Text = GetCalculation(this.monthCalendar1.SelectionStart, this.monthCalendar1.SelectionEnd);
 
             this.richTextBox1.Text = GetCalendarItemsText(this.monthCalendar1.SelectionStart);
         }
 
         private void notifyIcon1_MouseMove(object sender, MouseEventArgs e)
         {
-            string text = GetText(false, this.monthCalendar1.SelectionStart);
+            string text = GetText(false, this.monthCalendar1.SelectionStart, this.monthCalendar1.SelectionEnd);
             this.notifyIcon1.Text = text;
         }
 
@@ -251,7 +275,7 @@ namespace CalendarTool
                 next1 = new DateTime(DateTime.Now.Year + 1, 1, 1);
             }
 
-            SetDate(next1, true);
+            SetDate(next1, next1, true);
         }
 
         private void btnQ2_Click(object sender, EventArgs e)
@@ -267,7 +291,7 @@ namespace CalendarTool
                 next1 = new DateTime(DateTime.Now.Year + 1, 4, 1);
             }
 
-            SetDate(next1, true);
+            SetDate(next1, next1,true);
         }
 
         private void btnQ3_Click(object sender, EventArgs e)
@@ -282,7 +306,7 @@ namespace CalendarTool
             {
                 next1 = new DateTime(DateTime.Now.Year + 1, 7, 1);
             }
-            SetDate(next1, true);
+            SetDate(next1, next1,true);
         }
 
         private void btnQ4_Click(object sender, EventArgs e)
@@ -291,7 +315,7 @@ namespace CalendarTool
 
             next1 = new DateTime(DateTime.Now.Year, 10, 1);
 
-            SetDate(next1, true);
+            SetDate(next1, next1, true);
         }
 
         private void MainForm_VisibleChanged(object sender, EventArgs e)
@@ -322,7 +346,7 @@ namespace CalendarTool
 
         private void monthCalendar1_DateChanged(object sender, DateRangeEventArgs e)
         {
-            SetDate(e.Start, true);
+            SetDate(e.Start, e.Start);
         }
 
         private void label1_MouseClick(object sender, MouseEventArgs e)
@@ -345,5 +369,10 @@ namespace CalendarTool
             "" => throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input)),
             _ => string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1))
         };
+
+        private void monthCalendar1_DateSelected(object sender, DateRangeEventArgs e)
+        {
+            SetDate(e.Start, e.End);
+        }
     }
 }
