@@ -1,22 +1,22 @@
 {
   "Items": [
     {
-      "Group":  "appointments",
+      "Tag":  "appointment",
       "Datetime": "2023-04-07T14:00:00",
       "Info": "test 14 maart"
     },
     {
-      "Group": "appointments",
+      "Tag": "appointment",
       "Datetime": "2023-04-08T10:00:00",
       "Info": "test 15 maart"
     },
     {
-      "Group": "milestones",
+      "Tag": "milestone",
       "Datetime": "2023-04-07T00:00:00",
       "Info": "milestone 7 april"
     },
     {
-      "Group": "milestones",
+      "Tag": "milestone",
       "Datetime": "2023-04-08T00:00:00",
       "Info": "milestone 8 april"
     }

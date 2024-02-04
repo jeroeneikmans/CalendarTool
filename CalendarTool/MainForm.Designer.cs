@@ -35,7 +35,10 @@
             contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(components);
             toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             panel1 = new System.Windows.Forms.Panel();
-            label2 = new System.Windows.Forms.Label();
+            btnD = new System.Windows.Forms.Button();
+            checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            textBox1 = new System.Windows.Forms.TextBox();
+            btnA = new System.Windows.Forms.Button();
             panel2 = new System.Windows.Forms.Panel();
             btnM = new System.Windows.Forms.Button();
             btnQ4 = new System.Windows.Forms.Button();
@@ -44,7 +47,6 @@
             btnQ1 = new System.Windows.Forms.Button();
             label1 = new System.Windows.Forms.Label();
             monthCalendar1 = new System.Windows.Forms.MonthCalendar();
-            richTextBox1 = new System.Windows.Forms.RichTextBox();
             contextMenuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -75,26 +77,65 @@
             // panel1
             // 
             panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            panel1.Controls.Add(label2);
+            panel1.Controls.Add(btnD);
+            panel1.Controls.Add(checkedListBox1);
+            panel1.Controls.Add(textBox1);
+            panel1.Controls.Add(btnA);
             panel1.Controls.Add(panel2);
             panel1.Controls.Add(label1);
             panel1.Controls.Add(monthCalendar1);
-            panel1.Controls.Add(richTextBox1);
             panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             panel1.Location = new System.Drawing.Point(0, 0);
             panel1.Name = "panel1";
             panel1.Size = new System.Drawing.Size(516, 491);
             panel1.TabIndex = 5;
             // 
-            // label2
+            // btnD
             // 
-            label2.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(265, 24);
-            label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(38, 15);
-            label2.TabIndex = 9;
-            label2.Text = "label2";
+            btnD.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            btnD.Location = new System.Drawing.Point(3, 20);
+            btnD.Name = "btnD";
+            btnD.Size = new System.Drawing.Size(45, 23);
+            btnD.TabIndex = 13;
+            btnD.Text = "-";
+            btnD.UseVisualStyleBackColor = true;
+            btnD.Click += btnD_Click;
+            // 
+            // checkedListBox1
+            // 
+            checkedListBox1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            checkedListBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            checkedListBox1.CheckOnClick = true;
+            checkedListBox1.Font = new System.Drawing.Font("Segoe UI", 9F);
+            checkedListBox1.FormattingEnabled = true;
+            checkedListBox1.HorizontalScrollbar = true;
+            checkedListBox1.Location = new System.Drawing.Point(3, 45);
+            checkedListBox1.Name = "checkedListBox1";
+            checkedListBox1.ScrollAlwaysVisible = true;
+            checkedListBox1.Size = new System.Drawing.Size(250, 416);
+            checkedListBox1.TabIndex = 12;
+            // 
+            // textBox1
+            // 
+            textBox1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            textBox1.Font = new System.Drawing.Font("Segoe UI", 9F);
+            textBox1.Location = new System.Drawing.Point(266, 20);
+            textBox1.Name = "textBox1";
+            textBox1.Size = new System.Drawing.Size(195, 23);
+            textBox1.TabIndex = 11;
+            // 
+            // btnA
+            // 
+            btnA.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            btnA.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            btnA.Location = new System.Drawing.Point(466, 20);
+            btnA.Name = "btnA";
+            btnA.Size = new System.Drawing.Size(45, 23);
+            btnA.TabIndex = 10;
+            btnA.Text = "+";
+            btnA.UseVisualStyleBackColor = true;
+            btnA.Click += btnA_Click;
             // 
             // panel2
             // 
@@ -194,16 +235,6 @@
             monthCalendar1.TabIndex = 6;
             monthCalendar1.DateSelected += monthCalendar1_DateSelected;
             // 
-            // richTextBox1
-            // 
-            richTextBox1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-            richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            richTextBox1.Location = new System.Drawing.Point(0, 24);
-            richTextBox1.Name = "richTextBox1";
-            richTextBox1.Size = new System.Drawing.Size(266, 432);
-            richTextBox1.TabIndex = 5;
-            richTextBox1.Text = "";
-            // 
             // MainForm
             // 
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -231,13 +262,15 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.MonthCalendar monthCalendar1;
-        private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Button btnM;
         private System.Windows.Forms.Button btnQ4;
         private System.Windows.Forms.Button btnQ3;
         private System.Windows.Forms.Button btnQ2;
         private System.Windows.Forms.Button btnQ1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button btnA;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.CheckedListBox checkedListBox1;
+        private System.Windows.Forms.Button btnD;
     }
 }
 

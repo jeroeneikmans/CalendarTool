@@ -34,12 +34,11 @@ namespace CalendarTool
 
             this.Text = "Info";
             this.label1.Text = this.Text;
-            this.label2.Text = string.Empty;
 
             this.notifyIcon1.Text = string.Empty;
 
-            LoadGroupDates();
-            AddGroupDates();
+            LoadCalendarDates();
+            ShowCalendarDates();
             SetToday();
         }
 
@@ -75,7 +74,11 @@ namespace CalendarTool
 
         private void HideInfo()
         {
-            this.richTextBox1.Width = 0;
+            this.btnD.Visible = false;
+
+            //this.richTextBox1.Width = 0;
+            this.checkedListBox1.Width = 0;
+
             this.Width = calendarWidth;
 
             this.LocationBottomRight();
@@ -83,7 +86,10 @@ namespace CalendarTool
 
         private void ShowInfo()
         {
-            this.richTextBox1.Width = infoWidth;
+            this.btnD.Visible = true;
+
+            //this.richTextBox1.Width = infoWidth;
+            this.checkedListBox1.Width = infoWidth;
             this.Width = infoWidth + calendarWidth;
 
             this.LocationBottomRight();
@@ -103,12 +109,14 @@ namespace CalendarTool
             int weekStart = calendar.GetWeekOfYear(dateStart, System.Globalization.CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
             int quarterStart = (dateStart.Month - 1) / 3 + 1;
             string dayStart = dateStart.ToString("dd-MM");
-            string dayOfWeekStart = FirstCharToUpper(dateStart.ToString("dddd")).Substring(0,3);
+            string dayOfWeekStart = FirstCharToUpper(dateStart.ToString("dddd")).Substring(0, 3);
 
             int weekEnd = calendar.GetWeekOfYear(dateEnd, System.Globalization.CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
             int quarterEnd = (dateEnd.Month - 1) / 3 + 1;
             string dayEnd = dateEnd.ToString("dd-MM");
             string dayOfWeekEnd = FirstCharToUpper(dateEnd.ToString("dddd")).Substring(0, 3);
+
+            string calculation = this.GetCalculation(dateStart, dateEnd);
 
             string text = string.Empty;
             if (isTitle)
@@ -119,7 +127,7 @@ namespace CalendarTool
                 }
                 else
                 {
-                    text = string.Format("Q{0} W{1} {2} {3} - Q{4} W{5} {6} {7}", quarterStart, weekStart, dayStart, dayOfWeekStart, quarterEnd, weekEnd, dayEnd, dayOfWeekEnd);
+                    text = string.Format("Q{0} W{1} {2} {3} - Q{4} W{5} {6} {7} ({8})", quarterStart, weekStart, dayStart, dayOfWeekStart, quarterEnd, weekEnd, dayEnd, dayOfWeekEnd, calculation);
                 }
             }
             else
@@ -148,21 +156,26 @@ namespace CalendarTool
             return text;
         }
 
-        private string GetCalendarItemsText(DateTime selection)
+        private string GetCalendarItemsText(DateTime dateStart, DateTime dateEnd)
         {
-            DateTime d = selection;
-
             string text = string.Empty;
 
             SortedList<DateTime, string> calendarItems = new();
 
             foreach (var item in _calendar.Items)
             {
-                if (item.Datetime.Date == d.Date)
+                if (item.Datetime.Date >= dateStart.Date && item.Datetime.Date <= dateEnd.Date)
                 {
                     text = string.Empty;
-                    text += item.Group;
+                    text += item.Tag;
                     text += ": ";
+                    /*
+                    if (!string.IsNullOrEmpty(item.Group))
+                    {
+                        text += item.Group;
+                        text += "- ";
+                    }
+                    */
                     text += item.Info;
                     text += Environment.NewLine;
 
@@ -173,7 +186,7 @@ namespace CalendarTool
             text = string.Empty;
             foreach (var item in calendarItems)
             {
-                text += item.Key.ToString("g");
+                text += item.Key.ToString("s");
                 text += Environment.NewLine;
                 text += item.Value;
                 text += Environment.NewLine;
@@ -182,24 +195,56 @@ namespace CalendarTool
             return text;
         }
 
-        private void LoadGroupDates()
+        private string GetCalendarDatesFile()
         {
             string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
             string directory = Path.GetDirectoryName(path);
             string file = Path.Combine(directory, "CalendarTool.json");
 
-            string json = File.ReadAllText(file);
-            _calendar = JsonSerializer.Deserialize<Calendar>(json);
+            return file;
         }
 
-        private void AddGroupDates()
+        private void LoadCalendarDates()
+        {
+            string file = this.GetCalendarDatesFile();
+
+            if (!File.Exists(file))
+            {
+                // create an empty dates file
+                _calendar = new Calendar();
+                this.SaveCalendarDates();
+            }
+            else
+            {
+                string json = File.ReadAllText(file);
+                _calendar = JsonSerializer.Deserialize<Calendar>(json);
+                _calendar.ApplyOwner();
+            }
+
+        }
+
+        private void ShowCalendarDatesRange(DateTime dateStart, DateTime dateEnd)
+        {
+            ((ListBox)this.checkedListBox1).DataSource = _calendar.SortedItems(dateStart, dateEnd);
+            ((ListBox)this.checkedListBox1).DisplayMember = "Title";
+            ((ListBox)this.checkedListBox1).ValueMember = "IsChecked";
+        }
+
+        private void SaveCalendarDates()
+        {
+            string file = this.GetCalendarDatesFile();
+            string json = JsonSerializer.Serialize<Calendar>(_calendar);
+            File.WriteAllText(file, json);
+        }
+
+        private void ShowCalendarDates()
         {
             this.monthCalendar1.SuspendLayout();
+            this.monthCalendar1.RemoveAllBoldedDates();
             foreach (var item in _calendar.Items)
             {
                 monthCalendar1.AddBoldedDate(item.Datetime);
             }
-
             this.monthCalendar1.ResumeLayout();
         }
 
@@ -226,9 +271,10 @@ namespace CalendarTool
 
             this.Text = GetText(true, this.monthCalendar1.SelectionStart, this.monthCalendar1.SelectionEnd);
             this.label1.Text = this.Text;
-            this.label2.Text = GetCalculation(this.monthCalendar1.SelectionStart, this.monthCalendar1.SelectionEnd);
 
-            this.richTextBox1.Text = GetCalendarItemsText(this.monthCalendar1.SelectionStart);
+            //this.richTextBox1.Text = GetCalendarItemsText(this.monthCalendar1.SelectionStart, this.monthCalendar1.SelectionEnd);
+
+            this.ShowCalendarDatesRange(dateStart, dateEnd);
         }
 
         private void notifyIcon1_MouseMove(object sender, MouseEventArgs e)
@@ -291,7 +337,7 @@ namespace CalendarTool
                 next1 = new DateTime(DateTime.Now.Year + 1, 4, 1);
             }
 
-            SetDate(next1, next1,true);
+            SetDate(next1, next1, true);
         }
 
         private void btnQ3_Click(object sender, EventArgs e)
@@ -306,7 +352,7 @@ namespace CalendarTool
             {
                 next1 = new DateTime(DateTime.Now.Year + 1, 7, 1);
             }
-            SetDate(next1, next1,true);
+            SetDate(next1, next1, true);
         }
 
         private void btnQ4_Click(object sender, EventArgs e)
@@ -352,7 +398,7 @@ namespace CalendarTool
         private void label1_MouseClick(object sender, MouseEventArgs e)
         {
             // toggle
-            if (this.richTextBox1.Width > 0)
+            if (this.checkedListBox1.Width > 0)
             {
                 this.HideInfo();
             }
@@ -373,6 +419,45 @@ namespace CalendarTool
         private void monthCalendar1_DateSelected(object sender, DateRangeEventArgs e)
         {
             SetDate(e.Start, e.End);
+        }
+
+        private void btnA_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(this.textBox1.Text))
+            {
+                SelectionRange selectionRange = this.monthCalendar1.SelectionRange;
+
+                DateTime i = selectionRange.Start;
+                while (i <= selectionRange.End)
+                {
+                    CalendarItem item = new()
+                    {
+                        Tag = this.textBox1.Text.Trim(),
+                        Info = "selectie",
+                        Datetime = i
+                    };
+                    i = i.AddDays(1);
+
+                    _calendar.AddCalendarItem(item);
+                }
+
+                this.SaveCalendarDates();
+                this.ShowCalendarDates();
+                this.ShowCalendarDatesRange(this.monthCalendar1.SelectionStart, this.monthCalendar1.SelectionEnd);
+
+            }
+        }
+
+        private void btnD_Click(object sender, EventArgs e)
+        {
+            foreach (var selectedItem in this.checkedListBox1.CheckedItems)
+            {
+                _calendar.RemoveCalendarItem(selectedItem as CalendarItem);
+            }
+
+            this.SaveCalendarDates();
+            this.ShowCalendarDates();
+            this.ShowCalendarDatesRange(this.monthCalendar1.SelectionStart, this.monthCalendar1.SelectionEnd);
         }
     }
 }

@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <None Update="CalendarTool.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
